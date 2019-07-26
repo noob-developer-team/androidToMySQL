@@ -2,24 +2,33 @@
     include_once("Connectionmysqli.php");
     if($_SERVER['REQUEST_METHOD'] == 'GET')
     {
-        echo "GET";
-    }
-    else if ($_SERVER['REQUEST_METHOD'] == 'POST')
-    {
-        if(isset($_POST['username']) && isset($_POST['password']))
+        if(isset($_GET['username']) && isset($_GET['password']))
         {
-            $username = $_POST['username'];
-            $password = $_POST['password'];
-            $query = "SELECT * FROM userlogin where name = '$username' and password = '$password'";
-            $result = mysqli_query($conn, $query);
-            $finalResult = mysqli_num_rows($result);
-            if($finalResult > 0 ){
-                echo "success_login";
-                exit;
-            }else{
-                echo "Incorrect_log";
-                exit;
+            
+            $username = $_GET['username'];
+            $password = $_GET['password'];
+            $query = "SELECT id, name FROM user where name = '$username' and password = '$password'";
+            if ($result=mysqli_query($conn,$query))
+            {
+                if (mysqli_num_rows($result)>0){
+                    // echo "success";
+                    $json = mysqli_fetch_all ($result, MYSQLI_ASSOC);
+                    echo json_encode($json);
+                } else {
+                    // echo "failed";
+                    $response['error'] = true; 
+                    $response['message'] = 'There is no result';
+                    echo json_encode($response);
+                }
+            }
+            else
+            {
+                // echo "failed";
+                $response['error'] = true; 
+                $response['message'] = 'Invalid username or password';
+                echo json_encode($response);
             }
         }
+        mysqli_close($conn); 
     }
 ?>
