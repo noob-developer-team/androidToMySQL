@@ -5,7 +5,7 @@ if ($_SERVER['REQUEST_METHOD'] =='POST'){
     $email = $_POST['email'];
     $password = $_POST['password'];
     $pid = $_POST['pid'];
-    $sql = "INSERT INTO userlogin (Name,Email,Password,PID) VALUES ('$username', '$email', '$password', '$pid')";
+    $sql = "INSERT INTO userlogin (Name,Password,PID) VALUES ('$username', '$password', '$pid')";
     if(mysqli_query($conn,$sql)){
         echo "Success signup";
     }else{
